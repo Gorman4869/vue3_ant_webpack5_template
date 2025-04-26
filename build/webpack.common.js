@@ -52,7 +52,7 @@ let processEnv = {
 if (isProd) {
   processEnv.COMMITID = JSON.stringify(commitid);
 }
-export default {
+module.exports = {
   //入口
   entry: {
     app: path.resolve(__dirname, "../src/main.js"),

@@ -1,23 +1,23 @@
 // webpack.prod.js - 生产环境配置
-// const { merge } = require("webpack-merge");
-// const common = require("./webpack.common.js");
-// const path = require("path");
-// const CopyPlugin = require("copy-webpack-plugin");
-// const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common.js");
+const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 // const { GenerateSW } = require("workbox-webpack-plugin");
-// const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-// const { BundleStatsWebpackPlugin } = require("bundle-stats-webpack-plugin");
-// const webpack = require("webpack");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const { BundleStatsWebpackPlugin } = require("bundle-stats-webpack-plugin");
+const webpack = require("webpack");
 
-import { merge } from "webpack-merge";
-import common from "./webpack.common.js";
-import path from "path";
-import CopyPlugin from "copy-webpack-plugin";
-import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
-import { GenerateSW } from "workbox-webpack-plugin";
-import SpeedMeasurePlugin from "speed-measure-webpack-plugin";
-import { BundleStatsWebpackPlugin } from "bundle-stats-webpack-plugin";
-import webpack from "webpack";
+// import { merge } from "webpack-merge";
+// import common from "./webpack.common.js";
+// import path from "path";
+// import CopyPlugin from "copy-webpack-plugin";
+// import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
+// // import { GenerateSW } from "workbox-webpack-plugin";
+// import SpeedMeasurePlugin from "speed-measure-webpack-plugin";
+// import { BundleStatsWebpackPlugin } from "bundle-stats-webpack-plugin";
+// import webpack from "webpack";
 // 是否需要性能分析
 const isAnalyze = process.env.ANALYZE === "true";
 const smp = new SpeedMeasurePlugin();
@@ -35,8 +35,8 @@ const config = merge(common, {
     new CopyPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, "public"),
-          to: path.resolve(__dirname, "dist"),
+          from: path.resolve(__dirname, "../public"),
+          to: path.resolve(__dirname, "../dist"),
           globOptions: {
             ignore: ["**/index.html", "**/favicon.ico"], // 这些文件由HtmlWebpackPlugin处理
           },
@@ -53,28 +53,28 @@ const config = merge(common, {
             ["gifsicle", { interlaced: true }],
             ["jpegtran", { progressive: true }],
             ["optipng", { optimizationLevel: 5 }],
-            [
-              "svgo",
-              {
-                plugins: [
-                  {
-                    name: "preset-default",
-                    params: {
-                      overrides: {
-                        removeViewBox: false,
-                        addAttributesToSVGElement: {
-                          params: {
-                            attributes: [
-                              { xmlns: "http://www.w3.org/2000/svg" },
-                            ],
-                          },
-                        },
-                      },
-                    },
-                  },
-                ],
-              },
-            ],
+            // [
+            //   "svgo",
+            //   {
+            //     plugins: [
+            //       {
+            //         name: "preset-default",
+            //         params: {
+            //           overrides: {
+            //             removeViewBox: false,
+            //             addAttributesToSVGElement: {
+            //               params: {
+            //                 attributes: [
+            //                   { xmlns: "http://www.w3.org/2000/svg" },
+            //                 ],
+            //               },
+            //             },
+            //           },
+            //         },
+            //       },
+            //     ],
+            //   },
+            // ],
           ],
         },
       },

@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve --config ./build/webpack.dev.js",
-    "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.prod.js",
-    "build:analyze": "cross-env NODE_ENV=production ANALYZE=true webpack --config ./build/webpack.prod.js",
+    "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.production.js",
+    "build:analyze": "cross-env NODE_ENV=production ANALYZE=true webpack --config ./build/webpack.production.js",
     "preview": "vite preview",
     "lint:eslint": "eslint \"src/**/*.{vue,ts,js}\" --fix",
     "lint:prettier": "prettier --write \"**/*.{js,ts,json,css,less,scss,vue,html,md}\"",

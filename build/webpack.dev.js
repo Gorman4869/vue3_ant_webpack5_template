@@ -14,7 +14,7 @@ module.exports = merge(common, {
   devtool: "eval-cheap-module-source-map",
   devServer: {
     static: {
-      directory: path.resolve(__dirname, "public"),
+      directory: path.resolve(__dirname, "../public"),
     },
     host: "0.0.0.0", // 允许外部访问
     port: 8080,
@@ -40,11 +40,11 @@ module.exports = merge(common, {
   // 开发环境特定插件
   plugins: [
     // ESLint
-    new ESLintPlugin({
-      extensions: ["js", "vue", "ts"],
-      fix: true,
-      emitWarning: true,
-    }),
+    // new ESLintPlugin({
+    //   extensions: ["js", "vue", "ts"],
+    //   fix: true,
+    //   emitWarning: true,
+    // }),
   ],
 
   // 开发环境优化

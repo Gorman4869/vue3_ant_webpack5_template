@@ -12,11 +12,25 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const threadLoader = require("thread-loader");
 const child_process = require("child_process");
+
+// import path from "path";
+// import webpack from "webpack";
+// import HtmlWebpackPlugin from "html-webpack-plugin";
+// import { VueLoaderPlugin } from "vue-loader";
+// import MiniCssExtractPlugin from "mini-css-extract-plugin";
+// import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+// import TerserPlugin from "terser-webpack-plugin";
+// // import { DefinePlugin } from "webpack";
+// import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+// import CompressionPlugin from "compression-webpack-plugin";
+// import { WebpackManifestPlugin } from "webpack-manifest-plugin";
+// import threadLoader from "thread-loader";
+// import { exec } from "child_process";
+// const DefinePlugin = webpack.DefinePlugin;
 const commitid = child_process
   .execSync("git show -s --format=%H")
   .toString()
   .trim();
-
 //预热线程池
 threadLoader.warmup(
   {
@@ -26,7 +40,7 @@ threadLoader.warmup(
     poolTimeout: 2000,
     name: "js-pool",
   },
-  ["babel-loader", "vue-loader"]
+  ["babel-loader", "vue-loader"],
 );
 
 const isDev = process.env.NODE_ENV === "development";
@@ -38,7 +52,7 @@ let processEnv = {
 if (isProd) {
   processEnv.COMMITID = JSON.stringify(commitid);
 }
-module.exports = {
+export default {
   //入口
   entry: {
     app: path.resolve(__dirname, "../src/main.js"),
@@ -63,8 +77,6 @@ module.exports = {
     extensions: [".js", ".vue", ".json"], //todo jsx
     //优化模块查找路径
     modules: [path.resolve(__dirname, "../node_modules")],
-    //缩小构建目标
-    symlink: false,
   },
   //模块配置
   module: {
@@ -306,7 +318,7 @@ module.exports = {
         // 共用组件
         commons: {
           name: "chunk-commons",
-          test: path.resolve(__dirname, "src/components"),
+          test: path.resolve(__dirname, "../src/components"),
           minChunks: 2, // 至少被2个入口引用
           priority: 5,
           reuseExistingChunk: true,
@@ -334,10 +346,10 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "public/index.html"),
+      template: path.resolve(__dirname, "../public/index.html"),
       filename: "index.html",
       title: "Vue3 Application",
-      favicon: path.resolve(__dirname, "public/favicon.ico"),
+      favicon: path.resolve(__dirname, "../public/favicon.ico"),
       meta: {
         viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
         "theme-color": "#4285f4",
@@ -415,7 +427,7 @@ module.exports = {
     buildDependencies: {
       config: [__filename],
     },
-    cacheDirectory: path.resolve(__dirname, "node_modules/.cache/webpack"),
+    cacheDirectory: path.resolve(__dirname, "../node_modules/.cache/webpack"),
     name: `${isProd ? "prod" : "dev"}-cache`,
     compression: "gzip",
   },

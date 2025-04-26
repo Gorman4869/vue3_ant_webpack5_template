@@ -3,6 +3,11 @@ const common = require("./webpack.common.js");
 const path = require("path");
 const ESLintPlugin = require("eslint-webpack-plugin");
 
+// import { merge } from "webpack-merge";
+// import common from "./webpack.common.js";
+// import path from "path";
+// import ESLintPlugin from "eslint-webpack-plugin";
+
 module.exports = merge(common, {
   mode: "development",
   //启用源码映射
@@ -23,22 +28,23 @@ module.exports = merge(common, {
       },
       progress: true,
     },
-    proxy: {
-      "/api": {
+    proxy: [
+      {
+        context: ["/api"],
         target: "http://localhost:3000",
         changeOrigin: true,
         pathRewrite: { "^/api": "" },
       },
-    },
+    ],
   },
   // 开发环境特定插件
   plugins: [
     // ESLint
-    // new ESLintPlugin({
-    //   extensions: ["js", "vue", "ts"],
-    //   fix: true,
-    //   emitWarning: true,
-    // }),
+    new ESLintPlugin({
+      extensions: ["js", "vue", "ts"],
+      fix: true,
+      emitWarning: true,
+    }),
   ],
 
   // 开发环境优化

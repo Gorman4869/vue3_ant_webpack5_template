@@ -28,7 +28,7 @@ npm install eslint eslint-plugin-vue eslint-config-prettier eslint-plugin-pretti
 
 # 安装 Commitlint 和 Husky lint-staged
 
-npm install husky @commitlint/cli @commitlint/config-conventional lint-staged cz-git -D
+npm install husky commitizen @commitlint/cli @commitlint/config-conventional lint-staged cz-git -D
 
 # 安装 stylelint
 

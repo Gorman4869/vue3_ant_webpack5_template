@@ -12,3 +12,5 @@ src/assets
 .eslintrc.js
 .prettierrc.js
 .stylelintrc.js
+postcss.config.js
+commitlint.config.cjs

@@ -1,17 +1,16 @@
-const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { VueLoaderPlugin } = require("vue-loader");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const { DefinePlugin } = require("webpack");
-const BundleAnalyzerPlugin =
-  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const CompressionPlugin = require("compression-webpack-plugin");
-const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const threadLoader = require("thread-loader");
-const child_process = require("child_process");
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const { DefinePlugin } = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CompressionPlugin = require('compression-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const threadLoader = require('thread-loader');
+const child_process = require('child_process');
 
 // import path from "path";
 // import webpack from "webpack";
@@ -27,104 +26,99 @@ const child_process = require("child_process");
 // import threadLoader from "thread-loader";
 // import { exec } from "child_process";
 // const DefinePlugin = webpack.DefinePlugin;
-const commitid = child_process
-  .execSync("git show -s --format=%H")
-  .toString()
-  .trim();
-//预热线程池
+const commitid = child_process.execSync('git show -s --format=%H').toString().trim();
+// 预热线程池
 threadLoader.warmup(
   {
     workers: 4,
     workerParallelJobs: 50,
     poolRespawn: false,
     poolTimeout: 2000,
-    name: "js-pool",
+    name: 'js-pool',
   },
-  ["babel-loader", "vue-loader"],
+  ['babel-loader', 'vue-loader'],
 );
 
-const isDev = process.env.NODE_ENV === "development";
-const isProd = process.env.NODE_ENV === "production";
-let processEnv = {
+const isDev = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
+const processEnv = {
   NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-  BASE_URL: JSON.stringify("/"),
+  BASE_URL: JSON.stringify('/'),
 };
 if (isProd) {
   processEnv.COMMITID = JSON.stringify(commitid);
 }
 module.exports = {
-  //入口
+  // 入口
   entry: {
-    app: path.resolve(__dirname, "../src/main.js"),
+    app: path.resolve(__dirname, '../src/main.js'),
   },
-  //出口
+  // 出口
   output: {
-    path: path.resolve(__dirname, "../dist"),
-    filename: isProd ? "js/[name].[contenthash:8].js" : "js/[name].js",
-    chunkFilename: isProd
-      ? "js/chunk-[name].[contenthash:8].js"
-      : "js/chunk-[name].js",
-    assetModuleFilename: "assets/[name].[contenthash:8].[ext]",
-    clean: true, //每次构建前清理输出目录
-    publicPath: "/", //静态资源路径，打包后html中引用的静态资源路径
+    path: path.resolve(__dirname, '../dist'),
+    filename: isProd ? 'js/[name].[contenthash:8].js' : 'js/[name].js',
+    chunkFilename: isProd ? 'js/chunk-[name].[contenthash:8].js' : 'js/chunk-[name].js',
+    assetModuleFilename: 'assets/[name].[contenthash:8].[ext]',
+    clean: true, // 每次构建前清理输出目录
+    publicPath: '/', // 静态资源路径，打包后html中引用的静态资源路径
   },
-  //解析配置
+  // 解析配置
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "../src"),
-      vue: "@vue/runtime-dom",
+      '@': path.resolve(__dirname, '../src'),
+      vue: '@vue/runtime-dom',
     },
-    extensions: [".js", ".vue", ".json"], //todo jsx
-    //优化模块查找路径
-    modules: [path.resolve(__dirname, "../node_modules")],
+    extensions: ['.js', '.vue', '.json'], // todo jsx
+    // 优化模块查找路径
+    modules: [path.resolve(__dirname, '../node_modules')],
   },
-  //模块配置
+  // 模块配置
   module: {
     noParse: /^(vue|vue-router|vuex|vuex-router-sync)$/,
     rules: [
-      //处理vue
+      // 处理vue
       {
         test: /\.vue$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: "thread-loader",
+            loader: 'thread-loader',
             options: {
               workers: 4,
               workerParallelJobs: 50,
               poolRespawn: false,
               poolTimeout: 2000,
-              name: "vue-pool",
+              name: 'vue-pool',
             },
           },
-          "vue-loader",
+          'vue-loader',
         ],
       },
-      //处理js
+      // 处理js
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: "thread-loader",
+            loader: 'thread-loader',
             options: {
               workers: 4,
               workerParallelJobs: 50,
               poolRespawn: false,
               poolTimeout: 2000,
-              name: "js-pool",
+              name: 'js-pool',
             },
           },
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
               cacheDirectory: true,
               cacheCompression: false,
               presets: [
                 [
-                  "@babel/preset-env",
+                  '@babel/preset-env',
                   {
-                    useBuiltIns: "usage",
+                    useBuiltIns: 'usage',
                     corejs: 3,
                     modules: false, // 保持ESM语法以便tree shaking
                   },
@@ -132,54 +126,50 @@ module.exports = {
                 //   '@babel/preset-typescript' //todo
               ],
               plugins: [
-                "@babel/plugin-transform-runtime",
-                "@babel/plugin-proposal-class-properties",
-                "@babel/plugin-proposal-object-rest-spread",
+                '@babel/plugin-transform-runtime',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-proposal-object-rest-spread',
               ],
             },
           },
         ],
       },
-      //处理css
+      // 处理css
       {
         test: /\.css$/,
         use: [
-          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               importLoaders: 1,
               modules: {
                 auto: true,
-                localIdentName: isDev
-                  ? "[path][name]__[local]"
-                  : "[hash:base64]",
+                localIdentName: isDev ? '[path][name]__[local]' : '[hash:base64]',
               },
             },
           },
-          "postcss-loader",
+          'postcss-loader',
         ],
       },
-      //处理less
+      // 处理less
       {
         test: /\.less$/,
         use: [
-          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               importLoaders: 2,
               modules: {
                 auto: true,
-                localIdentName: isDev
-                  ? "[path][name]__[local]"
-                  : "[hash:base64]",
+                localIdentName: isDev ? '[path][name]__[local]' : '[hash:base64]',
               },
             },
           },
-          "postcss-loader",
+          'postcss-loader',
           {
-            loader: "less-loader",
+            loader: 'less-loader',
             options: {
               lessOptions: {
                 javascriptEnabled: true,
@@ -192,63 +182,62 @@ module.exports = {
       {
         test: /\.(sass|scss)$/,
         use: [
-          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               importLoaders: 2,
               modules: {
-                auto: true,
-                localIdentName: isDev
-                  ? "[path][name]__[local]"
-                  : "[hash:base64]",
+                auto: (resourcePath) =>
+                  !resourcePath.includes('tailwind.css') && resourcePath.endsWith('.css'),
+                localIdentName: isDev ? '[path][name]__[local]' : '[hash:base64]',
               },
             },
           },
-          "postcss-loader",
-          "sass-loader",
+          'postcss-loader',
+          'sass-loader',
         ],
       },
-      //图片资源处理
+      // 图片资源处理
       {
         test: /\.(png|jpe?g|gif|webp|avif)$/i,
-        type: "asset",
+        type: 'asset',
         parser: {
           dataUrlCondition: {
-            maxSize: 10 * 1024, //小于10kb的图片转base64
+            maxSize: 10 * 1024, // 小于10kb的图片转base64
           },
         },
         generator: {
-          filename: "assets/images/[name].[contenthash:8].[ext]",
+          filename: 'assets/images/[name].[contenthash:8].[ext]',
         },
       },
-      //处理svg
+      // 处理svg
       {
         test: /\.svg$/,
-        type: "asset/resource",
+        type: 'asset/resource',
         generator: {
-          filename: "assets/icons/[name].[contenthash:8][ext]",
+          filename: 'assets/icons/[name].[contenthash:8][ext]',
         },
       },
-      //处理字体文件
+      // 处理字体文件
       {
         test: /\.(woff|woff2|eot|ttf|otf)(\?.*)?$/i,
-        type: "asset/resource",
+        type: 'asset/resource',
         generator: {
-          filename: "assets/fonts/[name].[contenthash:8][ext]",
+          filename: 'assets/fonts/[name].[contenthash:8][ext]',
         },
       },
-      //处理媒体文件
+      // 处理媒体文件
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i,
-        type: "asset/resource",
+        type: 'asset/resource',
         generator: {
-          filename: "assets/media/[name].[contenthash:8][ext]",
+          filename: 'assets/media/[name].[contenthash:8][ext]',
         },
       },
     ],
   },
-  //优化配置
+  // 优化配置
   optimization: {
     minimize: isProd,
     minimizer: [
@@ -273,7 +262,7 @@ module.exports = {
             // 生产环境特定压缩配置
             drop_console: isProd,
             drop_debugger: isProd,
-            pure_funcs: isProd ? ["console.log"] : [],
+            pure_funcs: isProd ? ['console.log'] : [],
           },
           mangle: {
             safari10: true,
@@ -288,46 +277,46 @@ module.exports = {
         parallel: 4,
       }),
     ],
-    //代码分割配置
+    // 代码分割配置
     splitChunks: {
-      chunks: "all",
+      chunks: 'all',
       cacheGroups: {
-        //分离vue相关库
+        // 分离vue相关库
         vue: {
-          name: "chunk-vue",
+          name: 'chunk-vue',
           test: /[\\/]node_modules[\\/](vue|vue-router|vuex|@vue)[\\/]/,
           priority: 20,
-          chunks: "all",
+          chunks: 'all',
         },
-        //ui库
+        // ui库
         ui: {
-          name: "chunk-ui",
+          name: 'chunk-ui',
           test: /[\\/]node_modules[\\/](element-plus|ant-design-vue|@vant)[\\/]/,
           priority: 15,
-          chunks: "all",
+          chunks: 'all',
         },
-        //分离大型库
+        // 分离大型库
         libs: {
-          name: "chunk-libs",
+          name: 'chunk-libs',
           test: /[\\/]node_modules[\\/]/,
           priority: 10,
-          chunks: "all",
+          chunks: 'all',
           minSize: 100 * 1024, // 100kb
           maxSize: 250 * 1024, // 250kb
         },
         // 共用组件
         commons: {
-          name: "chunk-commons",
-          test: path.resolve(__dirname, "../src/components"),
+          name: 'chunk-commons',
+          test: path.resolve(__dirname, '../src/components'),
           minChunks: 2, // 至少被2个入口引用
           priority: 5,
           reuseExistingChunk: true,
         },
         // 异步加载模块
         async: {
-          name: "chunk-async",
+          name: 'chunk-async',
           test: /[\\/]node_modules[\\/]/,
-          chunks: "async",
+          chunks: 'async',
           priority: 0,
           reuseExistingChunk: true,
           minChunks: 2,
@@ -335,24 +324,24 @@ module.exports = {
       },
     },
     // 运行时代码抽离
-    runtimeChunk: "single",
+    runtimeChunk: 'single',
 
     // 确保启用tree shaking
     usedExports: true,
-    moduleIds: isProd ? "deterministic" : "named",
-    chunkIds: isProd ? "deterministic" : "named",
+    moduleIds: isProd ? 'deterministic' : 'named',
+    chunkIds: isProd ? 'deterministic' : 'named',
   },
-  //插件配置
+  // 插件配置
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "../public/index.html"),
-      filename: "index.html",
-      title: "Vue3 Application",
-      favicon: path.resolve(__dirname, "../public/favicon.ico"),
+      template: path.resolve(__dirname, '../public/index.html'),
+      filename: 'index.html',
+      title: 'Vue3 Application',
+      favicon: path.resolve(__dirname, '../public/favicon.ico'),
       meta: {
-        viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
-        "theme-color": "#4285f4",
+        viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
+        'theme-color': '#4285f4',
       },
       minify: isProd
         ? {
@@ -368,7 +357,7 @@ module.exports = {
         : false,
     }),
     new DefinePlugin({
-      "process.env": processEnv,
+      'process.env': processEnv,
       __VUE_OPTIONS_API__: JSON.stringify(true),
       __VUE_PROD_DEVTOOLS__: JSON.stringify(!isProd),
     }),
@@ -376,15 +365,15 @@ module.exports = {
     // CSS提取（仅在生产环境启用）
     isProd &&
       new MiniCssExtractPlugin({
-        filename: "css/[name].[contenthash:8].css",
-        chunkFilename: "css/chunk-[name].[contenthash:8].css",
+        filename: 'css/[name].[contenthash:8].css',
+        chunkFilename: 'css/chunk-[name].[contenthash:8].css',
         ignoreOrder: true,
       }),
 
     // Gzip压缩（仅在生产环境启用）
     isProd &&
       new CompressionPlugin({
-        algorithm: "gzip",
+        algorithm: 'gzip',
         test: /\.(js|css|html|svg)$/,
         threshold: 10240, // 只处理大于10kb的资源
         minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
@@ -393,7 +382,7 @@ module.exports = {
     // 资源清单
     isProd &&
       new WebpackManifestPlugin({
-        fileName: "asset-manifest.json",
+        fileName: 'asset-manifest.json',
       }),
     // 模块联邦支持（如果需要的话）
     // new webpack.container.ModuleFederationPlugin({
@@ -415,26 +404,26 @@ module.exports = {
     new webpack.ProgressPlugin(),
 
     // 包分析（可选，通过环境变量控制是否启用）
-    process.env.ANALYZE === "true" &&
+    process.env.ANALYZE === 'true' &&
       new BundleAnalyzerPlugin({
-        analyzerMode: "static",
+        analyzerMode: 'static',
         openAnalyzer: false,
       }),
   ].filter(Boolean),
   // 缓存配置
   cache: {
-    type: "filesystem",
+    type: 'filesystem',
     buildDependencies: {
       config: [__filename],
     },
-    cacheDirectory: path.resolve(__dirname, "../node_modules/.cache/webpack"),
-    name: `${isProd ? "prod" : "dev"}-cache`,
-    compression: "gzip",
+    cacheDirectory: path.resolve(__dirname, '../node_modules/.cache/webpack'),
+    name: `${isProd ? 'prod' : 'dev'}-cache`,
+    compression: 'gzip',
   },
 
   // 性能提示设置
   performance: {
-    hints: isProd ? "warning" : false,
+    hints: isProd ? 'warning' : false,
     maxEntrypointSize: 512 * 1024, // 512KB
     maxAssetSize: 512 * 1024, // 512KB
   },

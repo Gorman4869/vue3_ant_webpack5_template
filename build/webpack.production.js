@@ -1,13 +1,13 @@
 // webpack.prod.js - 生产环境配置
-const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
-const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common.js');
+const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
+// const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 // const { GenerateSW } = require("workbox-webpack-plugin");
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const { BundleStatsWebpackPlugin } = require("bundle-stats-webpack-plugin");
-const webpack = require("webpack");
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin');
+const webpack = require('webpack');
 
 // import { merge } from "webpack-merge";
 // import common from "./webpack.common.js";
@@ -19,12 +19,12 @@ const webpack = require("webpack");
 // import { BundleStatsWebpackPlugin } from "bundle-stats-webpack-plugin";
 // import webpack from "webpack";
 // 是否需要性能分析
-const isAnalyze = process.env.ANALYZE === "true";
+const isAnalyze = process.env.ANALYZE === 'true';
 const smp = new SpeedMeasurePlugin();
 
 // 基础配置
 const config = merge(common, {
-  mode: "production",
+  mode: 'production',
 
   // 生产环境不需要source map或使用更轻量的版本
   devtool: false, // 可以设置为'source-map'来启用源码映射
@@ -35,50 +35,50 @@ const config = merge(common, {
     new CopyPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, "../public"),
-          to: path.resolve(__dirname, "../dist"),
+          from: path.resolve(__dirname, '../public'),
+          to: path.resolve(__dirname, '../dist'),
           globOptions: {
-            ignore: ["**/index.html", "**/favicon.ico"], // 这些文件由HtmlWebpackPlugin处理
+            ignore: ['**/index.html', '**/favicon.ico'], // 这些文件由HtmlWebpackPlugin处理
           },
         },
       ],
     }),
 
     // 图片优化
-    new ImageMinimizerPlugin({
-      minimizer: {
-        implementation: ImageMinimizerPlugin.imageminMinify,
-        options: {
-          plugins: [
-            ["gifsicle", { interlaced: true }],
-            ["jpegtran", { progressive: true }],
-            ["optipng", { optimizationLevel: 5 }],
-            // [
-            //   "svgo",
-            //   {
-            //     plugins: [
-            //       {
-            //         name: "preset-default",
-            //         params: {
-            //           overrides: {
-            //             removeViewBox: false,
-            //             addAttributesToSVGElement: {
-            //               params: {
-            //                 attributes: [
-            //                   { xmlns: "http://www.w3.org/2000/svg" },
-            //                 ],
-            //               },
-            //             },
-            //           },
-            //         },
-            //       },
-            //     ],
-            //   },
-            // ],
-          ],
-        },
-      },
-    }),
+    // new ImageMinimizerPlugin({
+    //   minimizer: {
+    //     implementation: ImageMinimizerPlugin.imageminMinify,
+    //     options: {
+    //       plugins: [
+    //         // ["gifsicle", { interlaced: true }],
+    //         ["jpegtran", { progressive: true }],
+    //         ["optipng", { optimizationLevel: 5 }],
+    //         // [
+    //         //   "svgo",
+    //         //   {
+    //         //     plugins: [
+    //         //       {
+    //         //         name: "preset-default",
+    //         //         params: {
+    //         //           overrides: {
+    //         //             removeViewBox: false,
+    //         //             addAttributesToSVGElement: {
+    //         //               params: {
+    //         //                 attributes: [
+    //         //                   { xmlns: "http://www.w3.org/2000/svg" },
+    //         //                 ],
+    //         //               },
+    //         //             },
+    //         //           },
+    //         //         },
+    //         //       },
+    //         //     ],
+    //         //   },
+    //         // ],
+    //       ],
+    //     },
+    //   },
+    // }),
 
     // PWA支持（可选）
     // new GenerateSW({
@@ -120,7 +120,7 @@ const config = merge(common, {
 
     // 定义环境变量
     new webpack.EnvironmentPlugin({
-      NODE_ENV: "production",
+      NODE_ENV: 'production',
       DEBUG: false,
     }),
 

@@ -6,10 +6,11 @@ module.exports = {
       features: {
         'nesting-rules': true,
       },
-      autoprefixer: {
-        flexbox: 'no-2009',
-        grid: true,
-      },
+    },
+    tailwindcss: {},
+    autoprefixer: {
+      flexbox: 'no-2009',
+      grid: true,
     },
     ...(process.env.NODE_ENV === 'production' ? { cssnano: {} } : {}),
   },

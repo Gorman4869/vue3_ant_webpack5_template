@@ -1,7 +1,7 @@
-const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
-const path = require("path");
-const ESLintPlugin = require("eslint-webpack-plugin");
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common.js');
+const path = require('path');
+// const ESLintPlugin = require('eslint-webpack-plugin');
 
 // import { merge } from "webpack-merge";
 // import common from "./webpack.common.js";
@@ -9,14 +9,14 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 // import ESLintPlugin from "eslint-webpack-plugin";
 
 module.exports = merge(common, {
-  mode: "development",
-  //启用源码映射
-  devtool: "eval-cheap-module-source-map",
+  mode: 'development',
+  // 启用源码映射
+  devtool: 'eval-cheap-module-source-map',
   devServer: {
     static: {
-      directory: path.resolve(__dirname, "../public"),
+      directory: path.resolve(__dirname, '../public'),
     },
-    host: "0.0.0.0", // 允许外部访问
+    host: '0.0.0.0', // 允许外部访问
     port: 8080,
     hot: true,
     compress: true, // 启用gzip压缩
@@ -30,10 +30,10 @@ module.exports = merge(common, {
     },
     proxy: [
       {
-        context: ["/api"],
-        target: "http://localhost:3000",
+        context: ['/api'],
+        target: 'http://localhost:3000',
         changeOrigin: true,
-        pathRewrite: { "^/api": "" },
+        pathRewrite: { '^/api': '' },
       },
     ],
   },
